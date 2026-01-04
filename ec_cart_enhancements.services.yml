@@ -1,0 +1,19 @@
+services:
+  # Decorate order processor to preserve messages.
+  ec_cart_enhancements.order_processor:
+    class: Drupal\ec_cart_enhancements\OrderProcessorDecorator
+    decorates: commerce_license.multiple_license_order_processor
+    decoration_priority: 100
+    arguments:
+      - '@ec_cart_enhancements.order_processor.inner'
+      - '@messenger'
+      - '@request_stack'
+
+  # Subscriber to show popup for licensed duplicates.
+  ec_cart_enhancements.messages_popup_subscriber:
+    class: Drupal\ec_cart_enhancements\EventSubscriber\MessagesPopupSubscriber
+    arguments:
+      - '@entity_type.manager'
+      - '@messenger'
+    tags:
+      - { name: event_subscriber }

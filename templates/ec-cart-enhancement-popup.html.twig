@@ -3,9 +3,16 @@
 ] %}
 
 <div {{ attributes.addClass(classes) }}>
-
   <div class="ec-cart-title">
-    {{ 'The item %title has been added to your cart.'|t({'%title': product_variation_entity.title.value}) }}
+    {% if messages %}
+      {% for item in messages %}
+        <div class="messages messages--{{ item.type }}">
+          {{ item.message }}
+        </div>
+      {% endfor %}
+    {% else %}
+      {{ 'The item has been added to your cart.'|t }}
+    {% endif %}
   </div>
 
   {% if carts %}
@@ -19,7 +26,11 @@
                   {{ item.title }}
                 </h5>
                 <p>
-                  {{ 'Qty:'|t }} {{ item.quantity }}
+                  {% if item.quantity %}
+                    {{ 'Qty:'|t }} {{ item.quantity }}
+                  {% else %}
+                    &nbsp;
+                  {% endif %}
                 </p>
               </div>
               <div class="ec-cart-item-right">
